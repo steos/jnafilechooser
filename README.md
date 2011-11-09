@@ -41,4 +41,4 @@ the corresponding Windows common dialogs.
 The demo module contains sample code.
 
 
-[1]: https://jna.dev.java.net/
+[1]: https://github.com/twall/jna
