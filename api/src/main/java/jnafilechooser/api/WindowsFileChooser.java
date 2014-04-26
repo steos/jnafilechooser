@@ -202,7 +202,6 @@ public class WindowsFileChooser
 		params.nMaxFile = bufferLength;
 
 		if (currentDirectory != null) {
-			System.out.println("setting initial dir: " + currentDirectory);
 			params.lpstrInitialDir = currentDirectory.getAbsolutePath();
 		}
 
