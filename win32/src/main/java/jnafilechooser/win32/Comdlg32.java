@@ -13,6 +13,8 @@ import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 import com.sun.jna.Structure;
 import com.sun.jna.WString;
+import java.util.Arrays;
+import java.util.List;
 
 public class Comdlg32
 {
@@ -49,6 +51,17 @@ public class Comdlg32
 		public Pointer lCustData;
 		public Pointer lpfnHook;
 		public Pointer lpTemplateName;
+
+		@Override
+		protected List getFieldOrder() {
+			return Arrays.asList(new String[] { "lStructSize",
+				"hwndOwner","hInstance","lpstrFilter","lpstrCustomFilter"
+			,"nMaxCustFilter","nFilterIndex","lpstrFile"," nMaxFile"
+			,"lpstrFileTitle","nMaxFileTitle","lpstrInitialDir","lpstrTitle"
+			,"Flags","nFileOffset","nFileExtension","lpstrDefExt"
+			,"lCustData","lpfnHook","lpTemplateName"
+			});
+		}
 	}
 
 	// flags for the OpenFileName structure

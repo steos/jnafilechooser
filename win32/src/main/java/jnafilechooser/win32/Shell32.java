@@ -12,6 +12,8 @@ package jnafilechooser.win32;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 import com.sun.jna.Structure;
+import java.util.Arrays;
+import java.util.List;
 
 
 public class Shell32
@@ -33,6 +35,11 @@ public class Shell32
 		public Pointer lpfn;
 		public Pointer lParam;
 		public int iImage;
+
+		protected List getFieldOrder() {
+		return Arrays.asList(new String[] { "hwndOwner","pidlRoot","pszDisplayName","lpszTitle"
+				,"ulFlags","lpfn","lParam","iImage"});
+		}
 	}
 
 	// flags for the BrowseInfo structure
