@@ -56,7 +56,7 @@ public class Comdlg32
 		protected List getFieldOrder() {
 			return Arrays.asList(new String[] { "lStructSize",
 				"hwndOwner","hInstance","lpstrFilter","lpstrCustomFilter"
-			,"nMaxCustFilter","nFilterIndex","lpstrFile"," nMaxFile"
+			,"nMaxCustFilter","nFilterIndex","lpstrFile","nMaxFile"
 			,"lpstrFileTitle","nMaxFileTitle","lpstrInitialDir","lpstrTitle"
 			,"Flags","nFileOffset","nFileExtension","lpstrDefExt"
 			,"lCustData","lpfnHook","lpTemplateName"
