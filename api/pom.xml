@@ -4,16 +4,16 @@
 	<parent>
 		<artifactId>jnafilechooser</artifactId>
 		<groupId>jnafilechooser</groupId>
-		<version>0.1-SNAPSHOT</version>
+		<version>1.1-SNAPSHOT</version>
 	</parent>
 	<groupId>jnafilechooser</groupId>
 	<artifactId>jnafilechooser-api</artifactId>
-	<version>0.1-SNAPSHOT</version>
+	<version>1.1-SNAPSHOT</version>
 	<dependencies>
 		<dependency>
 			<groupId>jnafilechooser</groupId>
 			<artifactId>jnafilechooser-win32</artifactId>
-			<version>0.1-SNAPSHOT</version>
+			<version>1.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 </project>
