@@ -202,7 +202,7 @@ public class WindowsFileChooser
 		params.nMaxFile = bufferLength;
 
 		if (currentDirectory != null) {
-			params.lpstrInitialDir = new WString(currentDirectory.getAbsolutePath());
+			params.lpstrInitialDir = currentDirectory.getAbsolutePath();
 		}
 
 		// build filter string if filters were specified
