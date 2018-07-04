@@ -4,11 +4,11 @@
 	<parent>
 		<artifactId>jnafilechooser</artifactId>
 		<groupId>jnafilechooser</groupId>
-		<version>1.1-SNAPSHOT</version>
+		<version>1.1</version>
 	</parent>
 	<groupId>jnafilechooser</groupId>
 	<artifactId>jnafilechooser-win32</artifactId>
-	<version>1.1-SNAPSHOT</version>
+	<version>1.1</version>
 	<dependencies>
 		<dependency>
 			<groupId>net.java.dev.jna</groupId>

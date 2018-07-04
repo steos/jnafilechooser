@@ -42,7 +42,7 @@ public class Comdlg32
 		public int nMaxFile;
 		public String lpstrFileTitle;
 		public int nMaxFileTitle;
-		public String lpstrInitialDir;
+		public WString lpstrInitialDir;
 		public String lpstrTitle;
 		public int Flags;
 		public short nFileOffset;
