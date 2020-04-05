@@ -11,7 +11,8 @@ package jnafilechooser.api;
 
 import java.awt.Window;
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import jnafilechooser.win32.Comdlg32;
 
@@ -126,13 +127,13 @@ public class WindowsFileChooser
 	 *               are the file extensions.
 	 */
 	public void addFilter(String name, String... filter) {
-        if (filter.length < 1) {
-            throw new IllegalArgumentException();
-        }
-        ArrayList<String> parts = new ArrayList<String>();
-        parts.add(name);
-        Collections.addAll(parts, filter);
-        filters.add(parts.toArray(new String[parts.size()]));
+		if (filter.length < 1) {
+			throw new IllegalArgumentException();
+		}
+		ArrayList<String> parts = new ArrayList<String>();
+		parts.add(name);
+		Collections.addAll(parts, filter);
+		filters.add(parts.toArray(new String[parts.size()]));
 	}
 
 	/**
