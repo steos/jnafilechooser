@@ -14,17 +14,9 @@
 	<inceptionYear>2010</inceptionYear>
 	<properties>
 	    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	    
+	    <java.version>1.8</java.version>
+	    <maven.compiler.target>${java.version}</maven.compiler.target>
+    	<maven.compiler.source>${java.version}</maven.compiler.source>
 	</properties>
-	<build>
-		<plugins>
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.1</version>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
 </project>
