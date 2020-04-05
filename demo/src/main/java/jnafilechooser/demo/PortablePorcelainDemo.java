@@ -42,6 +42,7 @@ public class PortablePorcelainDemo {
 		choose.addActionListener(new ActionListener() {
 			@Override public void actionPerformed(ActionEvent e) {
 				final JnaFileChooser fc = new JnaFileChooser();
+				fc.setTitle("Portable");
 				fc.setMultiSelectionEnabled(enableMultiSelect.isSelected());
 				fc.setMode((JnaFileChooser.Mode)selectionMode.getSelectedItem());
 				if (useFilter.isSelected()) {

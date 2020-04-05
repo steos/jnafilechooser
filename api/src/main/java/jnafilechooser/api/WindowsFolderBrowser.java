@@ -50,6 +50,10 @@ public class WindowsFolderBrowser
 		this.title = title;
 	}
 
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
 	/**
 	 * displays the dialog to the user
 	 *
