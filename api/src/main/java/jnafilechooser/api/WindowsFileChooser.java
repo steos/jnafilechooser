@@ -81,6 +81,9 @@ public class WindowsFileChooser
 	protected File currentDirectory;
 	protected ArrayList<String[]> filters;
 
+	protected String defaultFilename = "";
+	protected String dialogTitle = "";
+
 	/**
 	 * creates a new file chooser
 	 */
@@ -134,6 +137,16 @@ public class WindowsFileChooser
 		parts.add(name);
 		Collections.addAll(parts, filter);
 		filters.add(parts.toArray(new String[parts.size()]));
+	}
+
+	/**
+	 * set a title name
+	 *
+	 * @param Title of dialog
+	 * 
+	 */
+	public void setTitle(String tname) {
+		this.dialogTitle = tname;
 	}
 
 	/**
@@ -191,7 +204,14 @@ public class WindowsFileChooser
 		// 4 bytes per char + 1 null byte
 		final int bufferSize = 4 * bufferLength + 1;
 		params.lpstrFile = new Memory(bufferSize);
-		params.lpstrFile.clear(bufferSize);
+		if (open & !defaultFilename.isEmpty()) {
+			params.lpstrFile.setWideString(0, defaultFilename);
+		} else {
+		    params.lpstrFile.clear(bufferSize);
+		}
+		if (!dialogTitle.isEmpty()) {
+			params.lpstrTitle = new WString(dialogTitle);
+		}
 
 		// nMaxFile
 		// http://msdn.microsoft.com/en-us/library/ms646839.aspx:
@@ -295,4 +315,8 @@ public class WindowsFileChooser
 	public File getCurrentDirectory() {
 		return currentDirectory;
 	}
+
+    public void setDefaultFilename(String defaultFilename) {
+        this.defaultFilename = defaultFilename;
+    }
 }

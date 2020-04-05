@@ -47,6 +47,8 @@ public class NativePorcelainDemo {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				final WindowsFileChooser fc = new WindowsFileChooser();
+				fc.setDefaultFilename("Filechooser Demo.txt");
+				fc.setTitle("Filechooser Demo");
 				fc.addFilter("All Files", "*");
 				fc.addFilter("Pictures", "jpg", "jpeg", "gif", "bmp", "png");
 				fc.addFilter("Text Files", "txt", "log", "nfo", "xml");

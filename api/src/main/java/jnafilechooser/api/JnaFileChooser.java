@@ -66,6 +66,11 @@ public class JnaFileChooser
 	protected boolean multiSelectionEnabled;
 	protected Mode mode;
 
+	protected String defaultFile;
+    protected String dialogTitle;
+    protected String openButtonText;
+    protected String saveButtonText;
+
 	/**
 	 * creates a new file chooser with multiselection disabled and mode set
 	 * to allow file selection only.
@@ -75,6 +80,11 @@ public class JnaFileChooser
 		multiSelectionEnabled = false;
 		mode = Mode.Files;
 		selectedFiles = new File[] { null };
+
+		defaultFile = "";
+        dialogTitle = "";
+        openButtonText = "";
+        saveButtonText = "";
 	}
 
 	/**
@@ -159,6 +169,20 @@ public class JnaFileChooser
 		fc.setMultiSelectionEnabled(multiSelectionEnabled);
 		fc.setFileSelectionMode(mode.getJFileChooserValue());
 
+		// set select file
+		if (!defaultFile.isEmpty() & action == Action.Save) {
+			File fsel = new File(defaultFile);
+			fc.setSelectedFile(fsel);
+		}
+		if (!dialogTitle.isEmpty()) {
+			fc.setDialogTitle(dialogTitle);
+		}
+		if (action == Action.Open & !openButtonText.isEmpty()) {
+			fc.setApproveButtonText(openButtonText);
+		} else if (action == Action.Save & !saveButtonText.isEmpty()) {
+			fc.setApproveButtonText(saveButtonText);
+		}
+
 		// build filters
 		if (filters.size() > 0) {
 			boolean useAcceptAllFilter = false;
@@ -179,7 +203,12 @@ public class JnaFileChooser
 			result = fc.showOpenDialog(parent);
 		}
 		else {
-			result = fc.showSaveDialog(parent);
+			if (saveButtonText.isEmpty()) {
+				result = fc.showSaveDialog(parent);
+            }
+			else {
+				result = fc.showDialog(parent, null);
+            }
 		}
 		if (result == JFileChooser.APPROVE_OPTION) {
 			selectedFiles = multiSelectionEnabled ?
@@ -194,6 +223,14 @@ public class JnaFileChooser
 	private boolean showWindowsFileChooser(Window parent, Action action) {
 		final WindowsFileChooser fc = new WindowsFileChooser(currentDirectory);
 		fc.setFilters(filters);
+
+		if (!defaultFile.isEmpty())
+			fc.setDefaultFilename(defaultFile);
+
+		if (!dialogTitle.isEmpty()) {
+			fc.setTitle(dialogTitle);
+		}
+
 		final boolean result = fc.showDialog(parent, action == Action.Open);
 		if (result) {
 			selectedFiles = new File[] { fc.getSelectedFile() };
@@ -204,6 +241,9 @@ public class JnaFileChooser
 
 	private boolean showWindowsFolderBrowser(Window parent) {
 		final WindowsFolderBrowser fb = new WindowsFolderBrowser();
+		if (!dialogTitle.isEmpty()) {
+			fb.setTitle(dialogTitle);
+		}
 		final File file = fb.showDialog(parent);
 		if (file != null) {
 			selectedFiles = new File[] { file };
@@ -245,6 +285,10 @@ public class JnaFileChooser
 		return mode;
 	}
 
+	public void setCurrentDirectory(String currentDirectoryPath) {
+		this.currentDirectory = (currentDirectoryPath != null ? new File(currentDirectoryPath) : null);
+	}
+
 	/**
 	 * sets whether to enable multiselection
 	 *
@@ -256,6 +300,40 @@ public class JnaFileChooser
 
 	public boolean isMultiSelectionEnabled() {
 		return multiSelectionEnabled;
+	}
+
+	public void setDefaultFileName(String dfile) {
+		this.defaultFile = dfile;
+	}
+
+	/**
+	 * set a title name
+	 *
+	 * @param Title of dialog
+	 * 
+	 */
+	public void setTitle(String title) {
+		this.dialogTitle = title;
+	}
+
+	/**
+	 * set a open button name
+	 *
+	 * @param open button text
+	 * 
+	 */
+	public void setOpenButtonText(String buttonText) {
+		this.openButtonText = buttonText;
+	}
+
+	/**
+	 * set a save button name
+	 *
+	 * @param save button text
+	 * 
+	 */
+	public void setSaveButtonText(String buttonText) {
+		this.saveButtonText = buttonText;
 	}
 
 	public File[] getSelectedFiles() {
