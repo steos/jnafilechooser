@@ -6,14 +6,12 @@
 		<groupId>jnafilechooser</groupId>
 		<version>1.1-SNAPSHOT</version>
 	</parent>
-	<groupId>jnafilechooser</groupId>
 	<artifactId>jnafilechooser-demo</artifactId>
-	<version>1.1-SNAPSHOT</version>
 	<build>
 		<plugins>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.2</version>
+				<version>3.2.0</version>
 				<configuration>
 					<descriptors>
 						<descriptor>src/main/assembly/dist.xml</descriptor>
@@ -39,16 +37,13 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.miglayout</groupId>
-			<artifactId>miglayout</artifactId>
-			<version>3.7.4</version>
-			<type>jar</type>
-			<classifier>swing</classifier>
-			<scope>compile</scope>
+			<artifactId>miglayout-swing</artifactId>
+			<version>5.2</version>
 		</dependency>
 		<dependency>
 			<groupId>jnafilechooser</groupId>
 			<artifactId>jnafilechooser-api</artifactId>
-			<version>1.1-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 </project>
