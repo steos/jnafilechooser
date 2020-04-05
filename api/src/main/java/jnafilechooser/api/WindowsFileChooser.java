@@ -12,6 +12,7 @@ package jnafilechooser.api;
 import java.awt.Window;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import jnafilechooser.win32.Comdlg32;
 
@@ -121,15 +122,18 @@ public class WindowsFileChooser
 	/**
 	 * add a filter to the user-selectable list of file filters
 	 *
-	 * @param filter you must pass at least 2 arguments, the first argument
-	 *               is the name of this filter and the remaining arguments
+	 * @param name name of the filter
+	 * @param filter you must pass at least 1 argument, the arguments
 	 *               are the file extensions.
 	 */
-	public void addFilter(String ... filter) {
-		if (filter.length < 2) {
+	public void addFilter(String name, String... filter) {
+		if (filter.length < 1) {
 			throw new IllegalArgumentException();
 		}
-		filters.add(filter);
+		ArrayList<String> parts = new ArrayList<String>();
+		parts.add(name);
+		Collections.addAll(parts, filter);
+		filters.add(parts.toArray(new String[parts.size()]));
 	}
 
 	/**
@@ -176,7 +180,7 @@ public class WindowsFileChooser
 			// enable resizing of the dialog
 			| Comdlg32.OFN_ENABLESIZING;
 
-		params.hwndOwner = Native.getWindowPointer(parent);
+		params.hwndOwner = parent == null ? null : Native.getWindowPointer(parent);
 
 		// lpstrFile contains the selection path after the dialog
 		// returns. It must be big enough for the path to fit or
@@ -216,7 +220,7 @@ public class WindowsFileChooser
 			Comdlg32.GetSaveFileNameW(params);
 
 		if (approved) {
-			final String filePath = params.lpstrFile.getString(0, true);
+			final String filePath = params.lpstrFile.getWideString(0);
 			selectedFile = new File(filePath);
 			final File dir = selectedFile.getParentFile();
 			currentDirectory = dir;

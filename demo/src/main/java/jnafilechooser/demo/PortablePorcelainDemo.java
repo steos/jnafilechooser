@@ -33,8 +33,8 @@ public class PortablePorcelainDemo {
 		}
 
 		final JCheckBox enableMultiSelect = new JCheckBox();
-		final JComboBox selectionMode = new JComboBox(JnaFileChooser.Mode.values());
-		final JComboBox dialogType = new JComboBox(new String[] { "Open", "Save" });
+		final JComboBox<JnaFileChooser.Mode> selectionMode = new JComboBox<JnaFileChooser.Mode>(JnaFileChooser.Mode.values());
+		final JComboBox<String> dialogType = new JComboBox<String>(new String[] { "Open", "Save" });
 		final JCheckBox useFilter = new JCheckBox();
 		final JButton choose = new JButton("Choose");
 		final JFrame frame = new JFrame(PortablePorcelainDemo.class.getName());

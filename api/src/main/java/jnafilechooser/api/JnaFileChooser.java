@@ -13,6 +13,7 @@ import java.awt.Window;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -83,8 +84,10 @@ public class JnaFileChooser
 	 */
 	public JnaFileChooser(File currentDirectory) {
 		this();
-		this.currentDirectory = currentDirectory.isDirectory() ?
-			currentDirectory : currentDirectory.getParentFile();
+        if (currentDirectory != null) {
+			this.currentDirectory = currentDirectory.isDirectory() ?
+				currentDirectory : currentDirectory.getParentFile();
+		}
 	}
 
 	/**
@@ -215,17 +218,18 @@ public class JnaFileChooser
 	/**
 	 * add a filter to the user-selectable list of file filters
 	 *
-	 * @param filter you must pass at least 2 arguments, the first argument
-	 *               is the name of this filter and the remaining arguments
-	 *               are the file extensions.
-	 *
-	 * @throws IllegalArgumentException if less than 2 arguments are passed
+     * @param name   name of the filter
+     * @param filter you must pass at least 1 argument, the arguments are the file
+     *               extensions.
 	 */
-	public void addFilter(String ... values) {
-		if (values.length < 2) {
+	public void addFilter(String name, String... filter) {
+		if (filter.length < 1) {
 			throw new IllegalArgumentException();
 		}
-		filters.add(values);
+		ArrayList<String> parts = new ArrayList<String>();
+		parts.add(name);
+		Collections.addAll(parts, filter);
+		filters.add(parts.toArray(new String[parts.size()]));
 	}
 
 	/**

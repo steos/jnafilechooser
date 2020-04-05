@@ -50,7 +50,7 @@ public class PlumbingDemo {
 					final Pointer path = new Memory(260);
 					path.clear(260);
 					SHGetPathFromIDListW(pidl, path);
-					final String pathStr = path.getString(0, true);
+					final String pathStr = path.getWideString(0);
 					System.out.println(pathStr);
 				}
 				CoTaskMemFree(pidl);
@@ -74,7 +74,7 @@ public class PlumbingDemo {
 					| OFN_NOCHANGEDIR | OFN_HIDEREADONLY;
 
 				if (GetOpenFileNameW(params)) {
-					System.out.println(params.lpstrFile.getString(0, true));
+					System.out.println(params.lpstrFile.getWideString(0));
 				}
 				else {
 					int err = CommDlgExtendedError();
