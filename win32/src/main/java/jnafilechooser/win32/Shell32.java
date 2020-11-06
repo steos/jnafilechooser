@@ -36,7 +36,7 @@ public class Shell32
 		public Pointer lParam;
 		public int iImage;
 
-		protected List getFieldOrder() {
+		protected List<String> getFieldOrder() {
 		return Arrays.asList(new String[] { "hwndOwner","pidlRoot","pszDisplayName","lpszTitle"
 				,"ulFlags","lpfn","lParam","iImage"});
 		}
