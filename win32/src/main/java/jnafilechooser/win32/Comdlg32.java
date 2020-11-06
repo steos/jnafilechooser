@@ -53,7 +53,7 @@ public class Comdlg32
 		public Pointer lpTemplateName;
 
 		@Override
-		protected List getFieldOrder() {
+		protected List<String> getFieldOrder() {
 			return Arrays.asList(new String[] { "lStructSize",
 				"hwndOwner","hInstance","lpstrFilter","lpstrCustomFilter"
 			,"nMaxCustFilter","nFilterIndex","lpstrFile","nMaxFile"
