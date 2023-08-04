@@ -204,7 +204,7 @@ public class WindowsFileChooser
 		// 4 bytes per char + 1 null byte
 		final int bufferSize = 4 * bufferLength + 1;
 		params.lpstrFile = new Memory(bufferSize);
-		if (open & !defaultFilename.isEmpty()) {
+		if (!defaultFilename.isEmpty()) {
 			params.lpstrFile.setWideString(0, defaultFilename);
 		} else {
 		    params.lpstrFile.clear(bufferSize);
