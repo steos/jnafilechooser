@@ -150,13 +150,11 @@ public class JnaFileChooser
 				// CDN_SELCHANGE: http://msdn.microsoft.com/en-us/library/ms646865.aspx
 				// SendMessage: http://msdn.microsoft.com/en-us/library/ms644950.aspx
 			}
-			else if (!multiSelectionEnabled) {
-				if (mode == Mode.Files) {
-					return showWindowsFileChooser(parent, action);
-				}
-				else if (mode == Mode.Directories) {
-					return showWindowsFolderBrowser(parent);
-				}
+			if (mode == Mode.Files) {
+				return showWindowsFileChooser(parent, action);
+			}
+			else if (mode == Mode.Directories) {
+				return showWindowsFolderBrowser(parent);
 			}
 		}
 
@@ -223,7 +221,7 @@ public class JnaFileChooser
 	private boolean showWindowsFileChooser(Window parent, Action action) {
 		final WindowsFileChooser fc = new WindowsFileChooser(currentDirectory);
 		fc.setFilters(filters);
-
+		fc.setMultiSelectionEnabled(multiSelectionEnabled);
 		if (!defaultFile.isEmpty())
 			fc.setDefaultFilename(defaultFile);
 
@@ -233,7 +231,7 @@ public class JnaFileChooser
 
 		final boolean result = fc.showDialog(parent, action == Action.Open);
 		if (result) {
-			selectedFiles = new File[] { fc.getSelectedFile() };
+            selectedFiles = multiSelectionEnabled ? fc.getSelectedFiles() : new File[]{fc.getSelectedFile()};
 			currentDirectory = fc.getCurrentDirectory();
 		}
 		return result;
@@ -310,7 +308,7 @@ public class JnaFileChooser
 	 * set a title name
 	 *
 	 * @param Title of dialog
-	 * 
+	 *
 	 */
 	public void setTitle(String title) {
 		this.dialogTitle = title;
@@ -320,7 +318,7 @@ public class JnaFileChooser
 	 * set a open button name
 	 *
 	 * @param open button text
-	 * 
+	 *
 	 */
 	public void setOpenButtonText(String buttonText) {
 		this.openButtonText = buttonText;
@@ -330,7 +328,7 @@ public class JnaFileChooser
 	 * set a save button name
 	 *
 	 * @param save button text
-	 * 
+	 *
 	 */
 	public void setSaveButtonText(String buttonText) {
 		this.saveButtonText = buttonText;

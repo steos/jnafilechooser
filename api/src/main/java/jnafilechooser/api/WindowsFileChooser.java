@@ -11,8 +11,11 @@ package jnafilechooser.api;
 
 import java.awt.Window;
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import jnafilechooser.win32.Comdlg32;
 
@@ -77,12 +80,19 @@ import com.sun.jna.WString;
  */
 public class WindowsFileChooser
 {
+    public static final int MAX_PATH = 260;
 	protected File selectedFile;
 	protected File currentDirectory;
 	protected ArrayList<String[]> filters;
 
 	protected String defaultFilename = "";
 	protected String dialogTitle = "";
+
+    private int filterIndex = 1;
+    private boolean addToRecent = false;
+    private boolean multipleSelection = false;
+    private int maxNumberOfFiles = 10000;
+    private File[] selectedFiles = null;
 
 	/**
 	 * creates a new file chooser
@@ -195,16 +205,25 @@ public class WindowsFileChooser
 
 		params.hwndOwner = parent == null ? null : Native.getWindowPointer(parent);
 
+        if (!addToRecent) {
+            params.Flags = params.Flags | Comdlg32.OFN_DONTADDTORECENT;
+        }
+
+        if (multipleSelection) {
+            params.Flags = params.Flags | Comdlg32.OFN_ALLOWMULTISELECT;
+        }
+
 		// lpstrFile contains the selection path after the dialog
 		// returns. It must be big enough for the path to fit or
 		// GetOpenFileName returns an error (FNERR_BUFFERTOOSMALL).
 		// MAX_PATH is 260 so 4*260+1 bytes should be big enough (I hope...)
 		// http://msdn.microsoft.com/en-us/library/aa365247.aspx#maxpath
-		final int bufferLength = 260;
+		final int bufferLength = multipleSelection ? maxNumberOfFiles * MAX_PATH : MAX_PATH;
 		// 4 bytes per char + 1 null byte
 		final int bufferSize = 4 * bufferLength + 1;
 		params.lpstrFile = new Memory(bufferSize);
-		if (!defaultFilename.isEmpty()) {
+
+		if (open & !defaultFilename.isEmpty()) {
 			params.lpstrFile.setWideString(0, defaultFilename);
 		} else {
 		    params.lpstrFile.clear(bufferSize);
@@ -232,19 +251,55 @@ public class WindowsFileChooser
 		// build filter string if filters were specified
 		if (filters.size() > 0) {
 			params.lpstrFilter = new WString(buildFilterString());
-			params.nFilterIndex = 1; // TODO don't hardcode here
+			params.nFilterIndex = filterIndex;
 		}
 
 		final boolean approved = open ?
 			Comdlg32.GetOpenFileNameW(params) :
 			Comdlg32.GetSaveFileNameW(params);
 
-		if (approved) {
-			final String filePath = params.lpstrFile.getWideString(0);
-			selectedFile = new File(filePath);
-			final File dir = selectedFile.getParentFile();
-			currentDirectory = dir;
-		}
+        // clear selection
+        selectedFiles = null;
+
+        if (approved) {
+			// nFilterIndex is updated if user changed the selected filter
+			filterIndex = params.nFilterIndex;
+
+            if (multipleSelection) {
+                final byte[] bytes = params.lpstrFile.getByteArray(0, bufferSize);
+
+                final List<String> filePaths = bytesToFilePaths(bytes);
+                if (filePaths.size() == 1) {
+
+                    selectedFile = new File(filePaths.get(0));
+                    final File dir = selectedFile.getParentFile();
+                    currentDirectory = dir;
+
+                    selectedFiles = new File[1];
+                    selectedFiles[0] = selectedFile;
+
+                } else if (filePaths.size() > 1) {
+
+                    selectedFiles = new File[filePaths.size() - 1];
+
+                    currentDirectory = new File(filePaths.get(0));
+
+                    for (int i = 1; i < filePaths.size(); i++) {
+                        selectedFiles[i - 1] = new File(currentDirectory, filePaths.get(i));
+                    }
+                    selectedFile = selectedFiles[0];
+                }
+            } else {
+                final String filePath = params.lpstrFile.getWideString(0);
+
+                selectedFile = new File(filePath);
+                final File dir = selectedFile.getParentFile();
+                currentDirectory = dir;
+
+                selectedFiles = new File[1];
+                selectedFiles[0] = selectedFile;
+            }
+        }
 		else {
 			final int errCode = Comdlg32.CommDlgExtendedError();
 			// if the code is 0 the user clicked cancel
@@ -318,5 +373,58 @@ public class WindowsFileChooser
 
     public void setDefaultFilename(String defaultFilename) {
         this.defaultFilename = defaultFilename;
+    }
+
+	public int getFilterIndex() {
+		return filterIndex;
+	}
+
+	public void setFilterIndex(int filterIndex) {
+		this.filterIndex = filterIndex;
+	}
+
+	public boolean isAddToRecent() {
+		return addToRecent;
+	}
+
+	public void setAddToRecent(boolean addToRecent) {
+		this.addToRecent = addToRecent;
+	}
+
+	public boolean isMultipleSelection() {
+		return multipleSelection;
+	}
+
+	public void setMultiSelectionEnabled(boolean multipleSelection) {
+		this.multipleSelection = multipleSelection;
+	}
+
+	public int getMaxNumberOfFiles() {
+		return maxNumberOfFiles;
+	}
+
+	public void setMaxNumberOfFiles(int maxNumberOfFiles) {
+		this.maxNumberOfFiles = maxNumberOfFiles;
+	}
+
+	public File[] getSelectedFiles() {
+		return selectedFiles;
+	}
+
+	public static List<String> bytesToFilePaths(byte[] bytes) {
+        final List<String> filePaths = new ArrayList<>();
+        int from = 0;
+        for (int i = 0; i < bytes.length - 1; i += 2) {
+            if (bytes[i] == 0 && bytes[i + 1] == 0) {
+                if (i > from) {
+                    filePaths.add(new String(Arrays.copyOfRange(bytes, from, i),
+                            StandardCharsets.UTF_16LE)); //UTF 2-bytes little-endian CharSet seems to work...
+                    from = i + 2;
+                } else {
+                    break;
+                }
+            }
+        }
+        return filePaths;
     }
 }
