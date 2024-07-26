@@ -42,17 +42,17 @@ import com.sun.jna.Platform;
  */
 public class JnaFileChooser
 {
-	private static enum Action { Open, Save }
+	private enum Action { Open, Save }
 
 	/**
-	 * the availabe selection modes of the dialog
+	 * the available selection modes of the dialog
 	 */
-	public static enum Mode {
+	public enum Mode {
 		Files(JFileChooser.FILES_ONLY),
 		Directories(JFileChooser.DIRECTORIES_ONLY),
 		FilesAndDirectories(JFileChooser.FILES_AND_DIRECTORIES);
-		private int jFileChooserValue;
-		private Mode(int jfcv) {
+		private final int jFileChooserValue;
+		Mode(int jfcv) {
 			this.jFileChooserValue = jfcv;
 		}
 		public int getJFileChooserValue() {
@@ -76,7 +76,7 @@ public class JnaFileChooser
 	 * to allow file selection only.
 	 */
 	public JnaFileChooser() {
-		filters = new ArrayList<String[]>();
+		filters = new ArrayList<>();
 		multiSelectionEnabled = false;
 		mode = Mode.Files;
 		selectedFiles = new File[] { null };
@@ -103,7 +103,7 @@ public class JnaFileChooser
 	/**
 	 * creates a new file chooser with the specified initial directory
 	 *
-	 * @param currentDirectory the initial directory
+	 * @param currentDirectoryPath the initial directory
 	 */
 	public JnaFileChooser(String currentDirectoryPath) {
 		this(currentDirectoryPath != null ?
@@ -182,7 +182,7 @@ public class JnaFileChooser
 		}
 
 		// build filters
-		if (filters.size() > 0) {
+		if (!filters.isEmpty()) {
 			boolean useAcceptAllFilter = false;
 			for (final String[] spec : filters) {
 				// the "All Files" filter is handled specially by JFileChooser
@@ -196,7 +196,7 @@ public class JnaFileChooser
 			fc.setAcceptAllFileFilterUsed(useAcceptAllFilter);
 		}
 
-		int result = -1;
+		int result;
 		if (action == Action.Open) {
 			result = fc.showOpenDialog(parent);
 		}
@@ -264,10 +264,10 @@ public class JnaFileChooser
 		if (filter.length < 1) {
 			throw new IllegalArgumentException();
 		}
-		ArrayList<String> parts = new ArrayList<String>();
+		ArrayList<String> parts = new ArrayList<>();
 		parts.add(name);
 		Collections.addAll(parts, filter);
-		filters.add(parts.toArray(new String[parts.size()]));
+		filters.add(parts.toArray(new String[0]));
 	}
 
 	/**
@@ -307,7 +307,7 @@ public class JnaFileChooser
 	/**
 	 * set a title name
 	 *
-	 * @param Title of dialog
+	 * @param title of dialog
 	 *
 	 */
 	public void setTitle(String title) {
@@ -315,9 +315,9 @@ public class JnaFileChooser
 	}
 
 	/**
-	 * set a open button name
+	 * set an open button name
 	 *
-	 * @param open button text
+	 * @param buttonText button text
 	 *
 	 */
 	public void setOpenButtonText(String buttonText) {
@@ -327,7 +327,7 @@ public class JnaFileChooser
 	/**
 	 * set a save button name
 	 *
-	 * @param save button text
+	 * @param buttonText button text
 	 *
 	 */
 	public void setSaveButtonText(String buttonText) {

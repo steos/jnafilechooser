@@ -98,7 +98,7 @@ public class WindowsFileChooser
 	 * creates a new file chooser
 	 */
 	public WindowsFileChooser() {
-		filters = new ArrayList<String[]>();
+		filters = new ArrayList<>();
 	}
 
 	/**
@@ -109,7 +109,7 @@ public class WindowsFileChooser
 	 * @param currentDirectory the initial directory
 	 */
 	public WindowsFileChooser(File currentDirectory) {
-		filters = new ArrayList<String[]>();
+		filters = new ArrayList<>();
 		if (currentDirectory != null) {
 			this.currentDirectory = currentDirectory.isDirectory() ?
 				currentDirectory : currentDirectory.getParentFile();
@@ -143,20 +143,20 @@ public class WindowsFileChooser
 		if (filter.length < 1) {
 			throw new IllegalArgumentException();
 		}
-		ArrayList<String> parts = new ArrayList<String>();
+		ArrayList<String> parts = new ArrayList<>();
 		parts.add(name);
 		Collections.addAll(parts, filter);
-		filters.add(parts.toArray(new String[parts.size()]));
+		filters.add(parts.toArray(new String[0]));
 	}
 
 	/**
 	 * set a title name
 	 *
-	 * @param Title of dialog
+	 * @param title of dialog
 	 * 
 	 */
-	public void setTitle(String tname) {
-		this.dialogTitle = tname;
+	public void setTitle(String title) {
+		this.dialogTitle = title;
 	}
 
 	/**
@@ -249,7 +249,7 @@ public class WindowsFileChooser
 		}
 
 		// build filter string if filters were specified
-		if (filters.size() > 0) {
+		if (!filters.isEmpty()) {
 			params.lpstrFilter = new WString(buildFilterString());
 			params.nFilterIndex = filterIndex;
 		}
@@ -267,23 +267,16 @@ public class WindowsFileChooser
 
             if (multipleSelection) {
                 final byte[] bytes = params.lpstrFile.getByteArray(0, bufferSize);
-
                 final List<String> filePaths = bytesToFilePaths(bytes);
+
                 if (filePaths.size() == 1) {
-
                     selectedFile = new File(filePaths.get(0));
-                    final File dir = selectedFile.getParentFile();
-                    currentDirectory = dir;
-
+                    currentDirectory = selectedFile.getParentFile();
                     selectedFiles = new File[1];
                     selectedFiles[0] = selectedFile;
-
                 } else if (filePaths.size() > 1) {
-
                     selectedFiles = new File[filePaths.size() - 1];
-
                     currentDirectory = new File(filePaths.get(0));
-
                     for (int i = 1; i < filePaths.size(); i++) {
                         selectedFiles[i - 1] = new File(currentDirectory, filePaths.get(i));
                     }
@@ -293,8 +286,7 @@ public class WindowsFileChooser
                 final String filePath = params.lpstrFile.getWideString(0);
 
                 selectedFile = new File(filePath);
-                final File dir = selectedFile.getParentFile();
-                currentDirectory = dir;
+                currentDirectory = selectedFile.getParentFile();
 
                 selectedFiles = new File[1];
                 selectedFiles[0] = selectedFile;
@@ -333,7 +325,7 @@ public class WindowsFileChooser
 			// add label and terminate with null byte
 			filterStr.append(label);
 			filterStr.append('\0');
-			// build file extension patterns seperated by a
+			// build file extension patterns separated by a
 			// semicolon and terminated by a null byte
 			for (int i = 1; i < spec.length; ++i) {
 				filterStr.append("*.");
