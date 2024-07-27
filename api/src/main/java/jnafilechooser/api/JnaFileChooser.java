@@ -133,23 +133,7 @@ public class JnaFileChooser
 	}
 
 	private boolean showDialog(Window parent, Action action) {
-		// native windows filechooser doesn't support mixed selection mode
-		if (Platform.isWindows() && mode != Mode.FilesAndDirectories) {
-			// windows filechooser can only multiselect files
-			if (multiSelectionEnabled && mode == Mode.Files) {
-				// TODO Here we would use the native windows dialog
-				// to choose multiple files. However I haven't been able
-				// to get it to work properly yet because it requires
-				// tricky callback magic and somehow this didn't work for me
-				// quite as documented (probably because I messed something up).
-				// Because I don't need this feature right now I've put it on
-				// hold to get on with stuff.
-				// Example code: http://support.microsoft.com/kb/131462/en-us
-				// GetOpenFileName: http://msdn.microsoft.com/en-us/library/ms646927.aspx
-				// OFNHookProc: http://msdn.microsoft.com/en-us/library/ms646931.aspx
-				// CDN_SELCHANGE: http://msdn.microsoft.com/en-us/library/ms646865.aspx
-				// SendMessage: http://msdn.microsoft.com/en-us/library/ms644950.aspx
-			}
+		if (Platform.isWindows()) {
 			if (mode == Mode.Files) {
 				return showWindowsFileChooser(parent, action);
 			}
