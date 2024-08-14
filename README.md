@@ -18,6 +18,32 @@ public static void main(String[] args) {
 }
 ```
 
+## Installing as dependency
+
+You can install this library as e.g. Maven, Gradle, etc. dependency using [jitpack.io](https://jitpack.io/).
+
+### Maven
+
+Add the jitpack repository to your pom:
+
+```pom
+<repositories>
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+```
+
+Then you can add the dependency using any release tag, e.g.:
+
+```pom
+ <dependency>
+    <groupId>com.github.steos</groupId>
+    <artifactId>jnafilechooser</artifactId>
+    <version>1.1.2</version>
+</dependency>
+```
 ## How does it work?
 
 JnaFileChooser uses the awesome [JNA][1] library which enables access to native
